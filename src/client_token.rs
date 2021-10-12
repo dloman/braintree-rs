@@ -83,8 +83,8 @@ pub struct ClientToken {
     pub value: String,
 }
 
-impl From<Box<Read>> for ClientToken {
-    fn from(xml: Box<Read>) -> ClientToken {
+impl From<Box<dyn Read>> for ClientToken {
+    fn from(xml: Box<dyn Read>) -> ClientToken {
         let root = elementtree::Element::from_reader(xml).unwrap();
         ClientToken{
             value: String::from(root.find("value").unwrap().text()),

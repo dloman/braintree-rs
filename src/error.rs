@@ -25,20 +25,12 @@ pub enum Error {
 
 impl std::fmt::Display for Error {
         fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-            f.write_str(self.description())
+            f.write_str(&self.to_string())
         }
 }
 
 impl StdError for Error {
-    fn description(&self) -> &str {
-        match *self {
-            Error::Api(ref response) => &response.message,
-            Error::Http(ref err) => err.description(),
-            Error::TestOperationInProduction => "Operation not allowed in production environment",
-        }
-    }
-
-    fn cause(&self) -> Option<&std::error::Error> {
+    fn source(&self) -> Option<&(dyn StdError + 'static)> {
         if let Error::Http(ref err) = *self {
             return Some(err)
         }
@@ -52,8 +44,8 @@ impl From<hyper::Error> for Error {
     }
 }
 
-impl std::convert::From<Box<std::io::Read>> for Error {
-    fn from(xml: Box<std::io::Read>) -> Error {
+impl std::convert::From<Box<dyn std::io::Read>> for Error {
+    fn from(xml: Box<dyn std::io::Read>) -> Error {
         let root = elementtree::Element::from_reader(xml).unwrap();
         Error::Api(ApiErrorResponse{
             message: String::from(root.find("message").unwrap().text()),

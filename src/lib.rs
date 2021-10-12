@@ -23,11 +23,11 @@
 //!
 //! ```rust
 //! extern crate braintree;
-//! 
+//!
 //! use braintree::{Braintree, CreditCard, Environment};
 //! use braintree::transaction;
 //! use std::error::Error;
-//! 
+//!
 //! fn main() {
 //!     // Create a handle to the Braintree API.
 //!     let bt = Braintree::new(
@@ -36,7 +36,7 @@
 //!         "<public_key>",
 //!         "<private_key>",
 //!     );
-//! 
+//!
 //!     // Attempt to charge the provided credit card $10.
 //!     let result = bt.transaction().create(transaction::Request{
 //!         amount: String::from("10.00"),
@@ -51,7 +51,7 @@
 //!         }),
 //!         ..Default::default()
 //!     });
-//! 
+//!
 //!     // Check to see if it worked.
 //!     match result {
 //!         Ok(transaction) => println!("Created transaction: {}", transaction.id),
@@ -111,7 +111,7 @@ pub use customer::Customer as Customer;
 pub use error::Error as Error;
 
 pub struct Braintree {
-    creds: Box<Credentials>,
+    creds: Box<dyn Credentials>,
     client: hyper::Client,
     merchant_url: hyper::Url,
     user_agent: String,
@@ -177,11 +177,11 @@ impl Braintree {
     }
 
     /// Returns a reader that will correctly decode the response body's data based on its Content-Encoding header.
-    fn response_reader(&self, response: hyper::client::response::Response) -> hyper::error::Result<Box<Read>> {
+    fn response_reader(&self, response: hyper::client::response::Response) -> hyper::error::Result<Box<dyn Read>> {
         // TODO: This is written this way in order to appease the borrow checker, but there's probably a better way to do this.
         let headers = response.headers.clone();
         let content_encoding = headers.get::<hyper::header::ContentEncoding>();
-        let mut r: Box<Read> = Box::new(response);
+        let mut r: Box<dyn Read> = Box::new(response);
         // ???: Use Content-Length somehow to provide a hint to the consumer?
         if let Some(content_encoding) = content_encoding {
             match content_encoding[0] {

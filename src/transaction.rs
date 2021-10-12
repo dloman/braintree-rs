@@ -15,8 +15,8 @@ pub struct Transaction {
     pub status: Status,
 }
 
-impl From<Box<Read>> for Transaction {
-    fn from(xml: Box<Read>) -> Transaction {
+impl From<Box<dyn Read>> for Transaction {
+    fn from(xml: Box<dyn Read>) -> Transaction {
         let root = elementtree::Element::from_reader(xml).unwrap();
         Transaction{
             id: String::from(root.find("id").unwrap().text()),
@@ -149,7 +149,7 @@ impl ::ToXml for Options {
 
 // TODO: implement this and add it to Options above
 // pub struct PayPalOptions {
-//     
+//
 // }
 
 #[derive(Copy, Clone, Debug)]
