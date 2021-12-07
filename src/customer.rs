@@ -9,6 +9,7 @@ pub struct Customer {
     pub first_name: Option<String>,
     pub id: Option<String>,
     pub last_name: Option<String>,
+    pub payment_method_nonce: Option<String>,
     pub phone: Option<String>,
     pub website: Option<String>,
 }
@@ -24,6 +25,7 @@ impl ::ToXml for Customer {
         write_xml!(s, "first-name", self.first_name);
         write_xml!(s, "id", self.id);
         write_xml!(s, "last-name", self.last_name);
+        write_xml!(s, "payment_method_nonce", self.payment_method_nonce);
         write_xml!(s, "phone", self.phone);
         write_xml!(s, "website", self.website);
         write!(s, "</{}>", name).unwrap();

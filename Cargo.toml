@@ -9,7 +9,7 @@ license = "MIT"
 
 [dependencies]
 RustyXML = "0.1.1"
-hyper = "0.10.10"
+hyper = "0.10.13"
 hyper-native-tls = "0.2.2"
-libflate = "0.1.5"
-elementtree = "0.4"
+libflate = "1.1.1"
+elementtree = "0.5"

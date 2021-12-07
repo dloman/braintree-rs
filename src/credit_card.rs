@@ -1,6 +1,7 @@
 use std::fmt::Write;
 use xml;
 
+pub use address::Address as Address;
 /// A record that includes credit card information.
 ///
 /// Generally, it's recommended to use a payment method nonce instead of raw
@@ -16,6 +17,7 @@ pub struct CreditCard {
     pub expiration_year: Option<String>,
     pub number: Option<String>,
     pub token: Option<String>,
+    pub billing_address: Option<Address>,
 }
 
 impl ::ToXml for CreditCard {

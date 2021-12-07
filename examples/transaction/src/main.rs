@@ -4,8 +4,6 @@ extern crate clap;
 use braintree::{Braintree, CreditCard, Environment};
 use braintree::transaction;
 
-use std::error::Error;
-
 fn print_transaction(transaction: transaction::Transaction, merchant_id: String) {
     println!("        ID: {}", transaction.id);
     println!("      Type: {:?}", transaction.typ);
@@ -70,7 +68,7 @@ fn main() {
                     print_transaction(transaction, merchant_id);
                     println!("");
                 },
-                Err(err) => println!("\nError: {}\n", err.description()),
+                Err(err) => println!("\nError: {}\n", err),
             }
         },
 
@@ -84,7 +82,7 @@ fn main() {
                     print_transaction(transaction, merchant_id);
                     println!("");
                 },
-                Err(err) => println!("\nError: {}\n", err.description()),
+                Err(err) => println!("\nError: {}\n", err),
             }
         },
 
@@ -94,7 +92,7 @@ fn main() {
 
             match result {
                 Ok(transaction) => println!("\nSuccessfully voided {}\n", transaction.id),
-                Err(err) => println!("\nError: {}\n", err.description()),
+                Err(err) => println!("\nError: {}\n", err),
             }
         },
 
@@ -108,7 +106,7 @@ fn main() {
                     print_transaction(transaction, merchant_id);
                     println!("");
                 },
-                Err(err) => println!("\nError: {}\n", err.description()),
+                Err(err) => println!("\nError: {}\n", err),
             }
         },
 
@@ -118,7 +116,7 @@ fn main() {
 
             match result {
                 Ok(transaction) => println!("\nSuccessfully settled {}\n", transaction.id),
-                Err(err) => println!("\nError: {}\n", err.description()),
+                Err(err) => println!("\nError: {}\n", err),
             }
         },
 
