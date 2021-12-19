@@ -38,3 +38,22 @@ impl ::ToXml for Address {
         s
     }
 }
+
+impl From<&elementtree::Element> for Address {
+    fn from(root: &elementtree::Element) -> Address {
+        Address{
+            company: Some(String::from(root.find("company").unwrap().text())),
+            country_code_alpha2 : Some(String::from(root.find("country-code-alpha2").unwrap().text())),
+            country_code_alpha3 : Some(String::from(root.find("country-code-alpha3").unwrap().text())),
+            country_code_numeric: Some(String::from(root.find("country-code-numeric").unwrap().text())),
+            country_name: Some(String::from(root.find("country-name").unwrap().text())),
+            extended_address: Some(String::from(root.find("extended-address").unwrap().text())),
+            first_name: Some(String::from(root.find("first-name").unwrap().text())),
+            last_name: Some(String::from(root.find("last-name").unwrap().text())),
+            locality: Some(String::from(root.find("locality").unwrap().text())),
+            postal_code: Some(String::from(root.find("postal-code").unwrap().text())),
+            region: Some(String::from(root.find("region").unwrap().text())),
+            street_address: Some(String::from(root.find("street-address").unwrap().text())),
+        }
+    }
+}

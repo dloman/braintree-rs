@@ -16,6 +16,7 @@ pub struct CreditCard {
     pub expiration_month: Option<String>,
     pub expiration_year: Option<String>,
     pub number: Option<String>,
+    pub customer_id: Option<String>,
     pub token: Option<String>,
     pub billing_address: Option<Address>,
 }
@@ -32,8 +33,22 @@ impl ::ToXml for CreditCard {
         write_xml!(s, "expiration-year", self.expiration_year);
         write_xml!(s, "number", self.number);
         write_xml!(s, "token", self.token);
-        if let Some(ref billing_address) = self.billing_address { write!(s, "{}", billing_address.to_xml(None)).unwrap(); }
+        if let Some(ref billing_address) = self.billing_address { write!(s, "{}", billing_address.to_xml(Some("billing-address"))).unwrap(); }
         write!(s, "</{}>", name).unwrap();
         s
+    }
+}
+
+impl From<&elementtree::Element> for CreditCard {
+    fn from(root: &elementtree::Element) -> CreditCard {
+        CreditCard{
+            cardholder_name: Some(String::from(root.find("cardholder-name").unwrap().text())),
+            expiration_month: Some(String::from(root.find("expiration-month").unwrap().text())),
+            expiration_year: Some(String::from(root.find("expiration-year").unwrap().text())),
+            token: Some(String::from(root.find("token").unwrap().text())),
+            customer_id: Some(String::from(root.find("customer-id").unwrap().text())),
+            billing_address: Some(Address::from(root.find("billing-address").unwrap())),
+            ..Default::default()
+        }
     }
 }

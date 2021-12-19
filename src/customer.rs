@@ -32,6 +32,7 @@ impl ::ToXml for Customer {
         write_xml!(s, "payment_method_nonce", self.payment_method_nonce);
         write_xml!(s, "phone", self.phone);
         write_xml!(s, "website", self.website);
+        if let Some(ref credit_card) = self.credit_card { write!(s, "{}", credit_card.to_xml(Some("credit_card"))).unwrap(); }
         write!(s, "</{}>", name).unwrap();
         s
     }
@@ -40,7 +41,7 @@ impl ::ToXml for Customer {
 impl From<Box<dyn Read>> for Customer {
     fn from(xml: Box<dyn Read>) -> Customer {
         let root = elementtree::Element::from_reader(xml).unwrap();
-        print!("!!!! \n{:?}\n", root);
+
         Customer{
             company: Some(String::from(root.find("company").unwrap().text())),
             first_name: Some(String::from(root.find("first-name").unwrap().text())),
@@ -49,6 +50,7 @@ impl From<Box<dyn Read>> for Customer {
             fax: Some(String::from(root.find("fax").unwrap().text())),
             phone: Some(String::from(root.find("phone").unwrap().text())),
             website: Some(String::from(root.find("website").unwrap().text())),
+            credit_card: Some(CreditCard::from(root.find("credit-cards").expect("no credit card found").find("credit-card").unwrap())),
             ..Default::default()
         }
     }
