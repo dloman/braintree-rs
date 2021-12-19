@@ -2,6 +2,8 @@ use std::fmt::Write;
 use std::io::Read;
 use xml;
 
+pub use credit_card::CreditCard as CreditCard;
+
 #[derive(Debug, Default)]
 pub struct Customer {
     pub company: Option<String>,
@@ -13,6 +15,7 @@ pub struct Customer {
     pub payment_method_nonce: Option<String>,
     pub phone: Option<String>,
     pub website: Option<String>,
+    pub credit_card: Option<CreditCard>,
 }
 
 impl ::ToXml for Customer {

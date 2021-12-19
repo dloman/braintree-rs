@@ -32,6 +32,7 @@ impl ::ToXml for CreditCard {
         write_xml!(s, "expiration-year", self.expiration_year);
         write_xml!(s, "number", self.number);
         write_xml!(s, "token", self.token);
+        if let Some(ref billing_address) = self.billing_address { write!(s, "{}", billing_address.to_xml(None)).unwrap(); }
         write!(s, "</{}>", name).unwrap();
         s
     }
