@@ -101,6 +101,7 @@ pub mod client_token;
 pub mod credit_card;
 pub mod descriptor;
 pub mod customer;
+pub mod subscription;
 pub mod error;
 pub mod transaction;
 
@@ -108,6 +109,7 @@ pub use address::Address as Address;
 pub use credit_card::CreditCard as CreditCard;
 pub use descriptor::Descriptor as Descriptor;
 pub use customer::Customer as Customer;
+pub use subscription::Subscription as Subscription;
 pub use error::Error as Error;
 
 pub struct Braintree {
@@ -153,6 +155,10 @@ impl Braintree {
 
     pub fn transaction(&self) -> TransactionGateway {
         TransactionGateway(self)
+    }
+
+    pub fn subscription(&self) -> SubscriptionGateway {
+        SubscriptionGateway(self)
     }
 
     pub fn testing(&self) -> TestingGateway {
@@ -267,6 +273,26 @@ impl<'a> CustomerGateway<'a> {
         let response = self.0.execute(hyper::method::Method::Post, "customers", Some(req.to_xml(None).as_bytes()))?;
         match response.status {
             hyper::status::StatusCode::Created => Ok(customer::Customer::from(self.0.response_reader(response)?)),
+            _ => Err(Error::from(self.0.response_reader(response)?)),
+        }
+    }
+}
+
+pub struct SubscriptionGateway<'a>(&'a Braintree);
+
+impl<'a> SubscriptionGateway<'a> {
+    /// Generate a subscription. The simplest usage is:
+    ///
+    /// ```rust
+    /// let subscription = bt.subscription().create(Default::default());
+    /// ```
+    ///
+    /// Further customization can be done by manually specifying your own `client_token::Request` value.
+    pub fn create(&self, req: subscription::Request) -> error::Result<subscription::Subscription> {
+        print!("i think it makes it here \n {:?}\n", req.to_xml(None));
+        let response = self.0.execute(hyper::method::Method::Post, "subscription", Some(req.to_xml(None).as_bytes()))?;
+        match response.status {
+            hyper::status::StatusCode::Created => Ok(subscription::Subscription::from(self.0.response_reader(response)?)),
             _ => Err(Error::from(self.0.response_reader(response)?)),
         }
     }
