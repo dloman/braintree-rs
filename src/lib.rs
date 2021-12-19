@@ -147,6 +147,10 @@ impl Braintree {
         ClientTokenGateway(self)
     }
 
+    pub fn customer(&self) -> CustomerGateway {
+        CustomerGateway(self)
+    }
+
     pub fn transaction(&self) -> TransactionGateway {
         TransactionGateway(self)
     }
@@ -245,6 +249,24 @@ impl<'a> ClientTokenGateway<'a> {
         let response = self.0.execute(hyper::method::Method::Post, "client_token", Some(req.to_xml(None).as_bytes()))?;
         match response.status {
             hyper::status::StatusCode::Created => Ok(client_token::ClientToken::from(self.0.response_reader(response)?)),
+            _ => Err(Error::from(self.0.response_reader(response)?)),
+        }
+    }
+}
+
+pub struct CustomerGateway<'a>(&'a Braintree);
+
+impl<'a> CustomerGateway<'a> {
+    /// Generate a customer. The simplest usage is:
+    ///
+    /// ```rust
+    /// let customer = bt.customer().generate(Default::default());
+    /// ```
+    ///
+    pub fn generate(&self, req: Customer) -> error::Result<customer::Customer> {
+        let response = self.0.execute(hyper::method::Method::Post, "customers", Some(req.to_xml(None).as_bytes()))?;
+        match response.status {
+            hyper::status::StatusCode::Created => Ok(customer::Customer::from(self.0.response_reader(response)?)),
             _ => Err(Error::from(self.0.response_reader(response)?)),
         }
     }

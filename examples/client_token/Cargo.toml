@@ -4,4 +4,5 @@ version = "0.1.0"
 authors = ["Damien Radtke <damienradtke@gmail.com>"]
 
 [dependencies.braintree]
+url = { version = "2.2.2", features = ["serde"] }
 path = "../.."
