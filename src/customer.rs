@@ -1,3 +1,4 @@
+use std::collections::HashMap;
 use std::fmt::Write;
 use std::io::Read;
 use xml;
@@ -16,6 +17,12 @@ pub struct Customer {
     pub phone: Option<String>,
     pub website: Option<String>,
     pub credit_card: Option<CreditCard>,
+    /// A Collection of custom field/value pairs. Fields and
+    /// values must be less than 255 character. You must set up
+    /// each custom field in the Control Panel prior to passing
+    /// it with a request. Querying this value returns a collection
+    /// of custom field values stored on the customer object.
+    pub custom_fields: Option<HashMap<String, String>>,
 }
 
 impl ::ToXml for Customer {
@@ -33,9 +40,25 @@ impl ::ToXml for Customer {
         write_xml!(s, "phone", self.phone);
         write_xml!(s, "website", self.website);
         if let Some(ref credit_card) = self.credit_card { write!(s, "{}", credit_card.to_xml(Some("credit_card"))).unwrap(); }
+        if let Some(ref custom_fields) = self.custom_fields {
+            write!(s, "<custom_fields>").unwrap();
+            for (key, value) in custom_fields.into_iter() {
+                write_xml!(s, key, Some(value));
+            }
+            write!(s, "</custom_fields>").unwrap();
+        }
         write!(s, "</{}>", name).unwrap();
         s
     }
+}
+
+fn make_customer_fields(root: &elementtree::Element) -> HashMap<String, String> {
+    let mut custom_fields = HashMap::new();
+
+    for child in root.children() {
+        custom_fields.insert(child.tag().to_string(), child.text().to_string());
+    }
+    custom_fields
 }
 
 impl From<Box<dyn Read>> for Customer {
@@ -51,6 +74,7 @@ impl From<Box<dyn Read>> for Customer {
             phone: Some(String::from(root.find("phone").unwrap().text())),
             website: Some(String::from(root.find("website").unwrap().text())),
             credit_card: Some(CreditCard::from(root.find("credit-cards").expect("no credit card found").find("credit-card").unwrap())),
+            custom_fields: Some(make_customer_fields(root.find("custom-fields").expect("no custom fields found"))),
             ..Default::default()
         }
     }

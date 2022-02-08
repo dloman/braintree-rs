@@ -289,7 +289,7 @@ impl<'a> SubscriptionGateway<'a> {
     ///
     /// Further customization can be done by manually specifying your own `client_token::Request` value.
     pub fn create(&self, req: subscription::Request) -> error::Result<subscription::Subscription> {
-        let response = self.0.execute(hyper::method::Method::Post, "subscription", Some(req.to_xml(None).as_bytes()))?;
+        let response = self.0.execute(hyper::method::Method::Post, "subscriptions", Some(req.to_xml(None).as_bytes()))?;
         match response.status {
             hyper::status::StatusCode::Created => Ok(subscription::Subscription::from(self.0.response_reader(response)?)),
             _ => Err(Error::from(self.0.response_reader(response)?)),
