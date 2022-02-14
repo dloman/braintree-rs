@@ -21,6 +21,9 @@ pub enum Error {
     /// A test operation, such as forcing a transaction into a settlement
     /// status, was attempted in a production environment.
     TestOperationInProduction,
+    ///
+    /// Error in setting up api
+    Setup
 }
 
 impl std::fmt::Display for Error {

@@ -218,6 +218,15 @@ impl Environment {
             Environment::Production => "https://www.braintreegateway.com",
         }
     }
+
+    #[allow(dead_code)]
+    pub fn from_str(input: &str) -> Result<Environment, Error> {
+        match input {
+            "Sandbox"     => Ok(Environment::Sandbox),
+            "Production"  => Ok(Environment::Production),
+            _             => Err(Error::Setup),
+        }
+    }
 }
 
 trait Credentials {
