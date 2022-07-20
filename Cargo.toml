@@ -11,6 +11,6 @@ license = "MIT"
 url = { version = "2.2.2", features = ["serde"] }
 RustyXML = "0.1.1"
 hyper = "0.10.13"
-hyper-native-tls = "0.2.2"
+hyper-native-tls = "0.3.0"
 libflate = "1.1.1"
 elementtree = "0.5"
