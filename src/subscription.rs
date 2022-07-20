@@ -4,6 +4,8 @@ use std::io::Read;
 use std::fmt::Write;
 use xml;
 
+use crate::ToXml;
+
 /// A request to retrieve a new client token.
 #[derive(Debug, Default)]
 pub struct Request {
@@ -17,7 +19,7 @@ pub struct Request {
     pub payment_method_token: Option<String>,
 }
 
-impl ::ToXml for Request {
+impl ToXml for Request {
     fn to_xml(&self, name: Option<&str>) -> String {
         let name = xml::escape(&name.unwrap_or("subscription"));
         let mut s = String::new();

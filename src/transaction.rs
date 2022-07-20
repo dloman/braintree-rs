@@ -5,6 +5,12 @@ use std::io::Read;
 use std::fmt::Write;
 use xml;
 
+use crate::address;
+use crate::credit_card;
+use crate::customer;
+use crate::descriptor;
+
+use crate::ToXml;
 /// A record containing transaction details.
 #[derive(Debug)]
 pub struct Transaction {
@@ -45,25 +51,25 @@ pub struct Request {
     pub amount: String, // change to a decmial?
     pub order_id: Option<String>,
     pub billing_address_id: Option<String>,
-    pub billing: Option<::address::Address>,
-    pub credit_card: Option<::credit_card::CreditCard>,
+    pub billing: Option<address::Address>,
+    pub credit_card: Option<credit_card::CreditCard>,
     pub custom_fields: HashMap<String, String>,
-    pub customer: Option<::customer::Customer>,
+    pub customer: Option<customer::Customer>,
     pub customer_id: Option<String>,
-    pub descriptor: Option<::descriptor::Descriptor>,
+    pub descriptor: Option<descriptor::Descriptor>,
     pub options: Option<Options>,
     pub payment_method_nonce: Option<String>,
     pub payment_method_token: Option<String>,
     pub purchase_order_number: Option<String>,
     pub recurring: Option<bool>,
     pub service_fee_amount: Option<String>,
-    pub shipping: Option<::address::Address>,
+    pub shipping: Option<address::Address>,
     pub shipping_address_id: Option<String>,
     pub tax_amount: Option<String>,
     pub tax_exempt: Option<bool>,
 }
 
-impl ::ToXml for Request {
+impl ToXml for Request {
     fn to_xml(&self, name: Option<&str>) -> String {
         let name = xml::escape(&name.unwrap_or("transaction"));
         let mut s = String::new();
@@ -126,7 +132,7 @@ pub struct Options {
     pub submit_for_settlement: Option<bool>,
 }
 
-impl ::ToXml for Options {
+impl ToXml for Options {
     fn to_xml(&self, name: Option<&str>) -> String {
         let name = xml::escape(&name.unwrap_or("options"));
         let mut s = String::new();

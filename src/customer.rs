@@ -3,7 +3,8 @@ use std::fmt::Write;
 use std::io::Read;
 use xml;
 
-pub use credit_card::CreditCard as CreditCard;
+use crate::credit_card::CreditCard as CreditCard;
+use crate::ToXml;
 
 #[derive(Debug, Default)]
 pub struct Customer {
@@ -25,7 +26,7 @@ pub struct Customer {
     pub custom_fields: Option<HashMap<String, String>>,
 }
 
-impl ::ToXml for Customer {
+impl ToXml for Customer {
     fn to_xml(&self, name: Option<&str>) -> String {
         let name = xml::escape(&name.unwrap_or("customer"));
         let mut s = String::new();

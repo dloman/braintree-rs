@@ -1,6 +1,7 @@
 use std::fmt::Write;
 use xml;
 
+use crate::ToXml;
 #[derive(Debug, Default)]
 pub struct Address {
     pub company: Option<String>,
@@ -17,7 +18,7 @@ pub struct Address {
     pub street_address: Option<String>,
 }
 
-impl ::ToXml for Address {
+impl ToXml for Address {
     fn to_xml(&self, name: Option<&str>) -> String {
         let name = xml::escape(&name.unwrap_or("address"));
         let mut s = String::new();

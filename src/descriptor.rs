@@ -1,6 +1,8 @@
 use std::fmt::Write;
 use xml;
 
+use crate::ToXml;
+
 /// A record that describes what your customers will see on their statement
 /// when they make a purchase through your application.
 ///
@@ -14,7 +16,7 @@ pub struct Descriptor {
     pub url: Option<String>,
 }
 
-impl ::ToXml for Descriptor {
+impl ToXml for Descriptor {
     fn to_xml(&self, name: Option<&str>) -> String {
         let name = xml::escape(&name.unwrap_or("descriptor"));
         let mut s = String::new();

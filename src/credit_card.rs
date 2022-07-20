@@ -1,7 +1,9 @@
 use std::fmt::Write;
 use xml;
 
-pub use address::Address as Address;
+use crate::address::Address as Address;
+use crate::ToXml;
+
 /// A record that includes credit card information.
 ///
 /// Generally, it's recommended to use a payment method nonce instead of raw
@@ -21,7 +23,7 @@ pub struct CreditCard {
     pub billing_address: Option<Address>,
 }
 
-impl ::ToXml for CreditCard {
+impl ToXml for CreditCard {
     fn to_xml(&self, name: Option<&str>) -> String {
         let name = xml::escape(&name.unwrap_or("credit-card"));
         let mut s = String::new();

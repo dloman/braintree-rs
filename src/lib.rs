@@ -72,7 +72,6 @@
 
 extern crate elementtree;
 #[macro_use] extern crate hyper;
-extern crate hyper_native_tls;
 extern crate libflate;
 extern crate xml;
 
