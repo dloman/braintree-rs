@@ -228,7 +228,7 @@ impl Environment {
     }
 }
 
-trait Credentials {
+trait Credentials : Send {
     fn environment(&self) -> Environment;
     fn merchant_id(&self) -> &str;
     fn authorization_header(&self) -> hyper::header::Basic;
